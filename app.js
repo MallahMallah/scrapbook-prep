@@ -1,4 +1,4 @@
-// Scrapbook Prep — v1
+// JB's Scrapbooks — v1
 // Turns any number of photos into 4x6 print sheets with 4 photos each (2x3 in. each).
 
 const APP_VERSION = '1.0.1';
