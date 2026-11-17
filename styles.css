@@ -1,11 +1,13 @@
 :root {
-  --accent: #7a4e6b;
-  --accent-dark: #5e3a52;
-  --bg: #faf6f2;
+  --accent: #6b7a3f;        /* olive: buttons, borders (readable with white text) */
+  --accent-dark: #4f5a2c;
+  --pastel: #dfe6c6;        /* light pastel olive: header */
+  --pastel-soft: #eef2de;   /* selected option */
+  --bg: #f7f9f0;
   --card: #ffffff;
-  --text: #2b2326;
-  --muted: #6f6468;
-  --line: #e6dcd5;
+  --text: #2a2e22;
+  --muted: #5f6553;
+  --line: #dce2c9;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -21,8 +23,8 @@ body {
 }
 
 header {
-  background: var(--accent);
-  color: #fff;
+  background: var(--pastel);
+  color: var(--accent-dark);
   padding: calc(18px + env(safe-area-inset-top)) 20px 18px;
 }
 header h1 { margin: 0; font-size: 1.5rem; }
@@ -79,7 +81,7 @@ main { max-width: 640px; margin: 0 auto; padding: 16px; }
 }
 .seg button strong { display: block; font-size: 1rem; }
 .seg button small { display: block; color: var(--muted); font-size: .8rem; margin-top: 2px; }
-.seg button.on { border-color: var(--accent); background: #f4ebf0; }
+.seg button.on { border-color: var(--accent); background: var(--pastel-soft); }
 
 .toggle { display: flex; align-items: center; gap: 10px; font-size: 1rem; padding: 6px 2px; }
 .toggle input { width: 24px; height: 24px; accent-color: var(--accent); }

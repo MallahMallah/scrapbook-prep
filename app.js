@@ -1,7 +1,7 @@
 // Scrapbook Prep — v1
 // Turns any number of photos into 4x6 print sheets with 4 photos each (2x3 in. each).
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 
 // A 4x6 print at 300 dpi, portrait. Print services auto-rotate, so portrait is fine.
 const SHEET_W = 1200;
@@ -122,6 +122,7 @@ function sheetGroups() {
 }
 
 async function renderPreviews() {
+  resetShareButton();
   const token = ++renderToken;
   const groups = sheetGroups();
   sheetsEl.innerHTML = '';
@@ -214,17 +215,59 @@ async function withBusy(fn) {
   }
 }
 
+// Why sharing won't work here, or '' if it should.
+function shareProblem(files) {
+  if (!window.isSecureContext) {
+    return "Sharing only works when the app is opened from its https:// link (not http://).";
+  }
+  if (!navigator.share || !navigator.canShare) {
+    return "This browser can't share photos. Open the app in Chrome instead.";
+  }
+  if (files && !navigator.canShare({ files })) {
+    return "This browser won't share these photos. Open the app in Chrome instead.";
+  }
+  return '';
+}
+
+// Built prints waiting for a second tap (Android only lets a share open
+// within a few seconds of a tap, and building the prints can take longer).
+let readyToShare = null;
+const SHARE_LABEL = 'Share to print app';
+
+function resetShareButton() {
+  readyToShare = null;
+  $('share-btn').textContent = SHARE_LABEL;
+}
+
+async function openShare(files) {
+  resetShareButton();
+  setStatus('Pick your print app (Walmart, CVS, Walgreens…)');
+  await navigator.share({ files, title: 'Scrapbook prints' });
+  setStatus('Done!');
+}
+
 async function shareSheets() {
   await withBusy(async () => {
+    if (readyToShare) return openShare(readyToShare);
+
+    const early = shareProblem(null);
     const files = await buildFullSheets();
-    if (navigator.canShare && navigator.canShare({ files })) {
-      setStatus('Pick your print app (Walmart, CVS, Walgreens…)');
-      await navigator.share({ files, title: 'Scrapbook prints' });
-      setStatus('Done!');
-    } else {
-      setStatus("Sharing isn't available here, so the prints were saved instead.");
+    const problem = early || shareProblem(files);
+    if (problem) {
       downloadAll(files);
+      setStatus(`${problem} The prints were saved to your phone instead.`, true);
+      return;
     }
+
+    const stillActive = !navigator.userActivation || navigator.userActivation.isActive;
+    if (stillActive) {
+      try { return await openShare(files); }
+      catch (e) { if (e.name !== 'NotAllowedError') throw e; }
+    }
+    // Took too long since the tap; ask for one more tap.
+    readyToShare = files;
+    $('share-btn').textContent = 'Prints ready — tap to share';
+    setStatus('Your prints are ready. Tap the button again to pick your print app.');
   });
 }
 
