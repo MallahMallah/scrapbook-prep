@@ -1,5 +1,5 @@
 // Bump this every time you deploy a change. That's what tells phones a new version exists.
-const VERSION = 'v1.0.2';
+const VERSION = 'v1.0.3';
 const CACHE = `scrapbook-prep-${VERSION}`;
 
 const FILES = [
@@ -14,7 +14,10 @@ const FILES = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)));
+  // cache: 'reload' skips the browser's own copy, so we never save an outdated page.
+  event.waitUntil(caches.open(CACHE).then((c) =>
+    c.addAll(FILES.map((f) => new Request(f, { cache: 'reload' })))
+  ));
 });
 
 self.addEventListener('activate', (event) => {

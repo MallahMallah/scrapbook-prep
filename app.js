@@ -1,7 +1,7 @@
 // JB's Scrapbooks — v1
 // Turns any number of photos into 4x6 print sheets with 4 photos each (2x3 in. each).
 
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.0.3';
 
 // A 4x6 print at 300 dpi, portrait. Print services auto-rotate, so portrait is fine.
 const SHEET_W = 1200;
