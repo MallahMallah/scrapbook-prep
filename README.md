@@ -1,4 +1,4 @@
-# Scrapbook Prep
+# JB's Scrapbooks
 
 A small web app that puts 4 photos on each 4×6 print (each photo ends up 2×3 in. after cutting).
 It installs on Android like a normal app and updates itself.
