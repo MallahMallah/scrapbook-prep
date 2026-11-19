@@ -12,7 +12,8 @@ It installs on Android like a normal app and updates itself.
 | `app.js` | Everything the app does: pick photos, build the sheets, share/save |
 | `sw.js` | Lets the app work offline and detects new versions |
 | `manifest.webmanifest` | App name, icon, colors (what makes it installable) |
-| `icons/` | Home-screen icons |
+| `icons/` | Home-screen icons and logo |
+| `fonts/` | Nunito font (SIL Open Font License, see `OFL.txt`) |
 
 ## One-time setup: put it online (GitHub Pages, free)
 

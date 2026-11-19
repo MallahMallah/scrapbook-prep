@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Nunito";
+  src: url("fonts/nunito-latin.woff2") format("woff2");
+  font-weight: 200 1000;
+  font-display: swap;
+}
+
 :root {
   --accent: #2f7a6b;        /* logo teal: buttons, borders (readable with white text) */
   --accent-dark: #1d4f45;
@@ -8,7 +15,7 @@
   --text: #12241b;         /* logo dark green */
   --muted: #52645d;
   --line: #d3e3de;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -102,8 +109,6 @@ main { max-width: 640px; margin: 0 auto; padding: 16px; }
 .sheet canvas { width: 100%; height: auto; display: block; }
 .sheet .label { font-size: .85rem; color: var(--muted); margin-top: 6px; text-align: center; }
 
-.status { text-align: center; color: var(--muted); min-height: 1.4em; }
-.status.error { color: #a12d2d; }
 
 .update-banner {
   position: fixed;
@@ -141,7 +146,6 @@ main { max-width: 640px; margin: 0 auto; padding: 16px; }
   color: var(--muted);
   margin: 14px 2px 6px;
 }
-.opt-label:first-child { margin-top: 0; }
 .seg.three { grid-template-columns: 1fr 1fr 1fr; }
 .seg.three button { text-align: center; }
 
@@ -276,4 +280,93 @@ body.empty #count { text-align: center; }
   background: var(--pastel);
   color: var(--accent-dark);
   font-weight: 700;
+}
+
+/* ---------- Settings, folded into one line ---------- */
+
+.settings {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+}
+.settings summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 54px;
+  padding: 10px 16px;
+  list-style: none;
+  cursor: pointer;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+}
+.settings summary::-webkit-details-marker { display: none; }
+.settings-change {
+  flex: none;
+  color: var(--accent);
+  font-size: .95rem;
+}
+.settings-change::after { content: " ▾"; }
+.settings[open] .settings-change::after { content: " ▴"; }
+.settings[open] summary { border-bottom: 1px solid var(--line); }
+.settings-body { padding: 4px 14px 12px; }
+
+/* ---------- Shimmer while a photo is loading ---------- */
+
+.spot.loading {
+  background: linear-gradient(100deg, var(--pastel-soft) 30%, #ffffff 50%, var(--pastel-soft) 70%);
+  background-size: 300% 100%;
+  animation: shimmer 1.3s linear infinite;
+  box-shadow: inset 0 0 0 4px #fff;
+}
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+/* ---------- Pop-up messages ---------- */
+
+.toast {
+  position: fixed;
+  z-index: 15;
+  left: 50%;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  width: max-content;
+  max-width: calc(100% - 32px);
+  margin: 0;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--text);
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(18, 36, 27, .25);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 16px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.toast.show { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+.toast.error { background: #8f2424; }
+body.has-drawer .toast { bottom: calc(72px + 14px + env(safe-area-inset-bottom)); }
+
+/* ---------- "Start over?" box ---------- */
+
+.confirm {
+  width: min(400px, calc(100% - 32px));
+  padding: 0;
+  border: none;
+  border-radius: 18px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 12px 40px rgba(18, 36, 27, .3);
+}
+.confirm::backdrop { background: rgba(18, 36, 27, .45); }
+.confirm form { padding: 22px 20px 20px; }
+.confirm h2 { margin: 0 0 6px; font-size: 1.3rem; color: var(--accent-dark); }
+.confirm p { margin: 0 0 6px; color: var(--muted); }
+.confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.big-btn.danger-fill { background: #a12d2d; border-color: #a12d2d; color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spot.loading { animation: none; }
+  .toast, .drawer { transition: none; }
 }

@@ -39,7 +39,12 @@
       <p id="count" class="hint">Pick any number of photos. Every 4 photos make one print.</p>
     </section>
 
-    <section class="step options" id="options" hidden>
+    <details class="step settings" id="options" hidden>
+      <summary>
+        <span class="settings-summary" id="settings-summary">4×6 · Fill · Cut lines</span>
+        <span class="settings-change">Change</span>
+      </summary>
+      <div class="settings-body">
       <h2 class="opt-label">Print size</h2>
       <div class="seg three" data-setting="size" role="group" aria-label="Print size">
         <button type="button" data-value="4x6"><strong>4×6</strong><small>photos 2×3</small></button>
@@ -60,7 +65,8 @@
         <input type="checkbox" id="cutlines" checked>
         <span>Show light cut lines</span>
       </label>
-    </section>
+      </div>
+    </details>
 
     <section id="sheets" class="sheets" aria-live="polite"></section>
 
@@ -70,8 +76,20 @@
       <button type="button" class="link-btn" id="clear-btn">Start over</button>
     </section>
 
-    <p id="status" class="status" role="status"></p>
   </main>
+
+  <p id="status" class="toast" role="status" aria-live="polite"></p>
+
+  <dialog id="confirm-clear" class="confirm">
+    <form method="dialog">
+      <h2>Start over?</h2>
+      <p id="confirm-text">All photos and their edits will be cleared.</p>
+      <div class="confirm-actions">
+        <button type="submit" value="cancel" class="big-btn small">Keep them</button>
+        <button type="submit" value="clear" class="big-btn small danger-fill">Clear all</button>
+      </div>
+    </form>
+  </dialog>
 
   <div id="drawer" class="drawer" hidden>
     <div class="drawer-handle" id="drawer-handle" role="button" tabindex="0" aria-expanded="false" aria-controls="drawer-body">

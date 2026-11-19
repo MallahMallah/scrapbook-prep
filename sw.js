@@ -1,5 +1,5 @@
 // Bump this every time you deploy a change. That's what tells phones a new version exists.
-const VERSION = 'v1.2.0';
+const VERSION = 'v1.3.0';
 const CACHE = `scrapbook-prep-${VERSION}`;
 
 const FILES = [
@@ -11,6 +11,7 @@ const FILES = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
+  './fonts/nunito-latin.woff2',
 ];
 
 self.addEventListener('install', (event) => {

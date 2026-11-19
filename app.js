@@ -1,7 +1,7 @@
 // Scrapbook print maker
 // Turns any number of photos into print sheets with 4 photos each (2x2 grid).
 
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.3.0';
 
 const DPI = 300;
 const COLS = 2;
@@ -278,7 +278,7 @@ async function renderPreviews() {
     paper.append(canvas);
     items.forEach((item, i) => {
       const spot = document.createElement('div');
-      spot.className = 'spot';
+      spot.className = previewReady.has(item.id) ? 'spot' : 'spot loading';
       spot.dataset.id = item.id;
       spot.tabIndex = 0;
       spot.setAttribute('role', 'button');
@@ -297,6 +297,7 @@ async function renderPreviews() {
     return { canvas, items };
   });
   updateSelection();
+  updateSummary(groups);
 
   const failed = [];
   for (const view of views) {
@@ -306,14 +307,18 @@ async function renderPreviews() {
       if (token !== renderToken) return; // a newer render started
       if (img && img.error) { previewReady.set(item.id, null); failed.push(item.file.name); }
       else previewReady.set(item.id, img);
+      const spot = sheetsEl.querySelector(`.spot[data-id="${item.id}"]`);
+      if (spot) spot.classList.remove('loading');
     }
     drawView(view);
   }
 
-  updateSummary(groups, failed);
+  if (failed.length) {
+    setStatus(`Couldn't open ${failed.length} photo${failed.length === 1 ? '' : 's'} (${failed.join(', ')}). They'll be left blank.`, true);
+  }
 }
 
-function updateSummary(groups, failed) {
+function updateSummary(groups) {
   const n = state.items.length;
   const has = n > 0;
   $('options').hidden = !has;
@@ -334,17 +339,26 @@ function updateSummary(groups, failed) {
     $('count').textContent = msg;
   }
 
-  if (failed.length) {
-    setStatus(`Couldn't open ${failed.length} photo${failed.length === 1 ? '' : 's'} (${failed.join(', ')}). They'll be left blank.`, true);
-  } else {
-    setStatus('');
-  }
+  $('settings-summary').textContent = [
+    printSizeText(),
+    state.mode === 'fill' ? 'Fill' : 'Whole photo',
+    state.cutLines ? 'Cut lines' : 'No cut lines',
+  ].join(' · ');
 }
 
-function setStatus(msg, isError = false) {
+// Messages pop up briefly at the bottom. `sticky` ones stay until replaced.
+let toastTimer = null;
+function setStatus(msg, isError = false, sticky = false) {
+  clearTimeout(toastTimer);
+  if (!msg) { statusEl.classList.remove('show'); return; }
   statusEl.textContent = msg;
   statusEl.classList.toggle('error', isError);
+  statusEl.classList.add('show');
+  if (!sticky) {
+    toastTimer = setTimeout(() => statusEl.classList.remove('show'), isError ? 7000 : 3500);
+  }
 }
+statusEl.addEventListener('click', () => setStatus(''));
 
 // ---------- Selecting and moving photos ----------
 
@@ -585,7 +599,7 @@ async function buildFullSheets() {
   const canvas = document.createElement('canvas');
 
   for (let g = 0; g < groups.length; g++) {
-    setStatus(`Making print ${g + 1} of ${groups.length}…`);
+    setStatus(`Making print ${g + 1} of ${groups.length}…`, false, true);
     const entries = [];
     for (const item of groups[g]) {
       let img = null;
@@ -731,20 +745,41 @@ $('cutlines').addEventListener('change', (e) => {
   state.cutLines = e.target.checked;
   saveSettings();
   views.forEach(scheduleDraw);
+  updateSummary(sheetGroups());
   changed();
 });
 
 $('share-btn').addEventListener('click', shareSheets);
 $('save-btn').addEventListener('click', saveSheets);
+
+// "Start over" asks first, so a stray tap doesn't throw away careful edits.
+const confirmClear = $('confirm-clear');
 $('clear-btn').addEventListener('click', () => {
+  const n = state.items.length;
+  $('confirm-text').textContent = `All ${n} photo${n === 1 ? '' : 's'} and their edits will be cleared.`;
+  if (confirmClear.showModal) confirmClear.showModal();
+  else if (window.confirm('Start over? All photos and their edits will be cleared.')) clearAll();
+});
+confirmClear.addEventListener('close', () => {
+  if (confirmClear.returnValue === 'clear') clearAll();
+  confirmClear.returnValue = '';
+});
+// Tapping the dimmed area outside the box cancels.
+confirmClear.addEventListener('click', (e) => {
+  if (e.target === confirmClear) confirmClear.close('cancel');
+});
+
+function clearAll() {
   state.items = [];
   state.selectedId = null;
   previewReady.forEach((img) => img && img.close && img.close());
   previewReady.clear();
   previewCache.clear();
   setDrawerOpen(false);
+  setStatus('');
   renderPreviews();
-});
+  window.scrollTo(0, 0);
+}
 
 // ---------- Updates (service worker) ----------
 
