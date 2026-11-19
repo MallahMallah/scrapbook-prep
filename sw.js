@@ -1,5 +1,5 @@
 // Bump this every time you deploy a change. That's what tells phones a new version exists.
-const VERSION = 'v1.1.1';
+const VERSION = 'v1.2.0';
 const CACHE = `scrapbook-prep-${VERSION}`;
 
 const FILES = [

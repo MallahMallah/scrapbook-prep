@@ -1,13 +1,13 @@
 :root {
-  --accent: #6b7a3f;        /* olive: buttons, borders (readable with white text) */
-  --accent-dark: #4f5a2c;
-  --pastel: #dfe6c6;        /* light pastel olive: header */
-  --pastel-soft: #eef2de;   /* selected option */
-  --bg: #f7f9f0;
+  --accent: #2f7a6b;        /* logo teal: buttons, borders (readable with white text) */
+  --accent-dark: #1d4f45;
+  --pastel: #d6ebe5;        /* light teal: header */
+  --pastel-soft: #e9f4f1;   /* selected option */
+  --bg: #f4f9f7;
   --card: #ffffff;
-  --text: #2a2e22;
-  --muted: #5f6553;
-  --line: #dce2c9;
+  --text: #12241b;         /* logo dark green */
+  --muted: #52645d;
+  --line: #d3e3de;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -177,7 +177,7 @@ main { max-width: 640px; margin: 0 auto; padding: 16px; }
   flex-direction: column;
   background: var(--card);
   border-radius: 18px 18px 0 0;
-  box-shadow: 0 -4px 20px rgba(42, 46, 34, .18);
+  box-shadow: 0 -4px 20px rgba(18, 36, 27, .18);
   transform: translateY(calc(100% - var(--peek) - env(safe-area-inset-bottom)));
   transition: transform .25s ease;
 }
@@ -230,3 +230,50 @@ main { max-width: 640px; margin: 0 auto; padding: 16px; }
 /* Leave room so the drawer's peek never covers the last buttons. */
 body.has-drawer main { padding-bottom: calc(72px + 24px + env(safe-area-inset-bottom)); }
 body.has-drawer .update-banner { bottom: calc(72px + 12px + env(safe-area-inset-bottom)); }
+
+/* ---------- Welcome screen (before any photos are picked) ---------- */
+
+.welcome { display: none; }
+body.empty header { display: none; }
+body.empty main {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: calc(24px + env(safe-area-inset-top));
+  padding-bottom: calc(48px + env(safe-area-inset-bottom));
+}
+body.empty .welcome { display: block; text-align: center; margin-bottom: 28px; }
+body.empty #count { text-align: center; }
+
+.welcome-logo {
+  width: 128px; height: 128px;
+  border-radius: 30px;
+  display: block;
+  margin: 0 auto 18px;
+  box-shadow: 0 8px 24px rgba(18, 36, 27, .18);
+}
+.welcome-title { margin: 0; font-size: 1.9rem; color: var(--accent-dark); }
+.welcome-sub { margin: 6px auto 0; max-width: 22em; color: var(--muted); }
+
+.welcome-steps {
+  list-style: none;
+  padding: 0;
+  margin: 26px 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  font-size: .9rem;
+  color: var(--muted);
+}
+.welcome-steps li { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.welcome-steps span {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--pastel);
+  color: var(--accent-dark);
+  font-weight: 700;
+}

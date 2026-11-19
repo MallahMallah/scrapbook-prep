@@ -1,7 +1,7 @@
 // Scrapbook print maker
 // Turns any number of photos into print sheets with 4 photos each (2x2 grid).
 
-const APP_VERSION = '1.1.1';
+const APP_VERSION = '1.2.0';
 
 const DPI = 300;
 const COLS = 2;
@@ -320,6 +320,7 @@ function updateSummary(groups, failed) {
   $('actions').hidden = !has;
   $('drawer').hidden = !has;
   document.body.classList.toggle('has-drawer', has);
+  document.body.classList.toggle('empty', !has);
   $('pick-label').textContent = has ? 'Add more photos' : 'Choose photos';
   $('subtitle').textContent = `4 photos on each ${printSizeText()} print`;
 
