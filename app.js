@@ -1,7 +1,7 @@
 // Scrapbook print maker
 // Turns any number of photos into print sheets with 4 photos each (2x2 grid).
 
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.1.1';
 
 const DPI = 300;
 const COLS = 2;

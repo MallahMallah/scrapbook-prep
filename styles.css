@@ -23,10 +23,14 @@ body {
 }
 
 header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   background: var(--pastel);
   color: var(--accent-dark);
   padding: calc(18px + env(safe-area-inset-top)) 20px 18px;
 }
+.logo { flex: none; width: 52px; height: 52px; border-radius: 12px; display: block; }
 header h1 { margin: 0; font-size: 1.5rem; }
 header .sub { margin: 4px 0 0; opacity: .85; font-size: 1rem; }
 
