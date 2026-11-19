@@ -13,7 +13,7 @@
 <body>
   <header>
     <h1>JB's Scrapbooks</h1>
-    <p class="sub">4 small photos on each 4×6 print</p>
+    <p class="sub" id="subtitle">4 photos on each print</p>
   </header>
 
   <main>
@@ -22,15 +22,23 @@
         <span id="pick-label">Choose photos</span>
       </label>
       <input id="picker" type="file" accept="image/*" multiple hidden>
-      <p id="count" class="hint">Pick any number of photos. Every 4 photos make one 4×6 print.</p>
+      <p id="count" class="hint">Pick any number of photos. Every 4 photos make one print.</p>
     </section>
 
     <section class="step options" id="options" hidden>
-      <div class="seg" role="radiogroup" aria-label="How photos fill their spot">
-        <button type="button" data-mode="fill" class="on" aria-pressed="true">
+      <h2 class="opt-label">Print size</h2>
+      <div class="seg three" data-setting="size" role="group" aria-label="Print size">
+        <button type="button" data-value="4x6"><strong>4×6</strong><small>photos 2×3</small></button>
+        <button type="button" data-value="5x7"><strong>5×7</strong><small>photos 2½×3½</small></button>
+        <button type="button" data-value="8x10"><strong>8×10</strong><small>photos 4×5</small></button>
+      </div>
+
+      <h2 class="opt-label">Photos</h2>
+      <div class="seg" data-setting="mode" role="group" aria-label="How photos fill their spot">
+        <button type="button" data-value="fill">
           <strong>Fill</strong><small>No white edges, trims a little</small>
         </button>
-        <button type="button" data-mode="fit" aria-pressed="false">
+        <button type="button" data-value="fit">
           <strong>Whole photo</strong><small>Nothing trimmed, may have white edges</small>
         </button>
       </div>
@@ -50,6 +58,34 @@
 
     <p id="status" class="status" role="status"></p>
   </main>
+
+  <div id="drawer" class="drawer" hidden>
+    <div class="drawer-handle" id="drawer-handle" role="button" tabindex="0" aria-expanded="false" aria-controls="drawer-body">
+      <span class="grip" aria-hidden="true"></span>
+      <span class="drawer-title" id="drawer-title">Photo options</span>
+      <span class="drawer-sub" id="drawer-sub">Tap a photo on a print to edit it</span>
+    </div>
+    <div class="drawer-body" id="drawer-body">
+      <p id="drawer-empty" class="hint">Tap a photo on one of the prints above to change its color or shape, or to remove it.</p>
+      <div id="drawer-photo" hidden>
+        <h2 class="opt-label">Color</h2>
+        <div class="chips" data-setting="look" role="group" aria-label="Color">
+          <button type="button" data-value="color">Color</button>
+          <button type="button" data-value="bw">Black &amp; white</button>
+          <button type="button" data-value="sepia">Sepia</button>
+        </div>
+        <h2 class="opt-label">Shape</h2>
+        <div class="chips" data-setting="shape" role="group" aria-label="Shape">
+          <button type="button" data-value="square">Square</button>
+          <button type="button" data-value="rounded">Rounded</button>
+          <button type="button" data-value="circle">Circle</button>
+        </div>
+        <button type="button" class="big-btn small" id="apply-all">Use this color &amp; shape for all photos</button>
+        <button type="button" class="big-btn small danger" id="remove-photo">Remove this photo</button>
+        <button type="button" class="link-btn" id="deselect">Done</button>
+      </div>
+    </div>
+  </div>
 
   <div id="update-banner" class="update-banner" hidden>
     <span>A new version is ready.</span>

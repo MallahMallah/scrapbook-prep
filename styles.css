@@ -86,14 +86,16 @@ main { max-width: 640px; margin: 0 auto; padding: 16px; }
 .toggle { display: flex; align-items: center; gap: 10px; font-size: 1rem; padding: 6px 2px; }
 .toggle input { width: 24px; height: 24px; accent-color: var(--accent); }
 
-.sheets { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+.sheets { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 18px; }
+@media (min-width: 700px) { .sheets { grid-template-columns: 1fr 1fr; } }
 .sheet {
   background: var(--card);
   border-radius: 10px;
   padding: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,.12);
 }
-.sheet canvas { width: 100%; height: auto; display: block; border: 1px solid var(--line); }
+.paper { position: relative; border: 1px solid var(--line); }
+.sheet canvas { width: 100%; height: auto; display: block; }
 .sheet .label { font-size: .85rem; color: var(--muted); margin-top: 6px; text-align: center; }
 
 .status { text-align: center; color: var(--muted); min-height: 1.4em; }
@@ -101,6 +103,7 @@ main { max-width: 640px; margin: 0 auto; padding: 16px; }
 
 .update-banner {
   position: fixed;
+  z-index: 20;
   left: 12px; right: 12px;
   bottom: calc(12px + env(safe-area-inset-bottom));
   background: var(--text);
@@ -123,3 +126,103 @@ main { max-width: 640px; margin: 0 auto; padding: 16px; }
   font-weight: 600;
 }
 [hidden] { display: none !important; }
+
+/* ---------- Option labels, 3-way picker ---------- */
+
+.opt-label {
+  font-size: .85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--muted);
+  margin: 14px 2px 6px;
+}
+.opt-label:first-child { margin-top: 0; }
+.seg.three { grid-template-columns: 1fr 1fr 1fr; }
+.seg.three button { text-align: center; }
+
+/* ---------- Tappable photo spots on the previews ---------- */
+
+.spot {
+  position: absolute;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  outline: none;
+}
+.spot.selected {
+  box-shadow: inset 0 0 0 3px var(--accent), inset 0 0 0 5px rgba(255,255,255,.8);
+  z-index: 1;
+}
+.spot:focus-visible { box-shadow: inset 0 0 0 3px var(--accent-dark); }
+/* In Fill mode, a selected photo is dragged, not scrolled past. */
+.mode-fill .spot.selected { touch-action: none; cursor: grab; }
+
+/* ---------- Bottom drawer for photo options ---------- */
+
+.drawer {
+  --peek: 72px;
+  position: fixed;
+  z-index: 10;
+  left: 0; right: 0; bottom: 0;
+  max-width: 640px;
+  margin: 0 auto;
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -4px 20px rgba(42, 46, 34, .18);
+  transform: translateY(calc(100% - var(--peek) - env(safe-area-inset-bottom)));
+  transition: transform .25s ease;
+}
+.drawer.open { transform: translateY(0); }
+
+.drawer-handle {
+  flex: none;
+  display: block;
+  min-height: var(--peek);
+  padding: 8px 20px 12px;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+.drawer-handle:focus-visible { box-shadow: inset 0 0 0 3px var(--accent); border-radius: 18px 18px 0 0; }
+.grip {
+  display: block;
+  width: 44px; height: 5px;
+  margin: 0 auto 8px;
+  border-radius: 3px;
+  background: var(--line);
+}
+.drawer-title { display: block; font-weight: 600; color: var(--accent-dark); }
+.drawer-sub { display: block; font-size: .9rem; color: var(--muted); }
+
+.drawer-body {
+  overflow-y: auto;
+  padding: 0 20px calc(16px + env(safe-area-inset-bottom));
+}
+.drawer-body .hint { margin-bottom: 12px; }
+
+.chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 6px; }
+.chips button {
+  min-height: 48px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 2px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  font-size: .95rem;
+}
+.chips button.on { border-color: var(--accent); background: var(--pastel-soft); font-weight: 600; }
+
+.big-btn.small { min-height: 50px; font-size: 1rem; margin-top: 12px; margin-bottom: 0; }
+.big-btn.danger { border-color: #a12d2d; color: #a12d2d; }
+
+/* Leave room so the drawer's peek never covers the last buttons. */
+body.has-drawer main { padding-bottom: calc(72px + 24px + env(safe-area-inset-bottom)); }
+body.has-drawer .update-banner { bottom: calc(72px + 12px + env(safe-area-inset-bottom)); }

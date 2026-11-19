@@ -1,6 +1,6 @@
 # JB's Scrapbooks
 
-A small web app that puts 4 photos on each 4×6 print (each photo ends up 2×3 in. after cutting).
+A small web app that puts 4 photos on each print (4×6, 5×7 or 8×10), ready to cut apart for scrapbooking.
 It installs on Android like a normal app and updates itself.
 
 ## What's in here
@@ -30,35 +30,34 @@ It installs on Android like a normal app and updates itself.
 4. In the repo on GitHub: **Settings → Pages → Source: Deploy from a branch → Branch: main, folder: / (root) → Save**.
 5. After a minute or two the app is live at `https://YOUR-NAME.github.io/scrapbook-prep/`.
 
-## Put it on her phone
+## Put it on a phone
 
-1. Open the link in **Chrome** on her phone.
+1. Open the link in **Chrome** on a phone.
 2. Tap the **⋮** menu → **Add to home screen** → **Install**.
 3. It now has its own icon and opens full screen like any other app.
 
 ## Shipping an update
 
 1. Make your changes in VS Code.
-2. In `sw.js`, bump the version: `const VERSION = 'v1.0.1';` (**this step is what tells her phone there's a new version**).
+2. In `sw.js`, bump the version, e.g. `const VERSION = 'v1.1.0';` → `'v1.1.1'` (**this step is what tells installed copies there's a new version**).
 3. Commit and push.
-4. The next time she opens the app, a banner says **"A new version is ready" → Update now**.
+4. The next time the app is opened, a banner says **"A new version is ready" → Update now**.
 
-## Testing without touching her version
+## Testing without touching the live version
 
 - **On your computer:** install the VS Code extension *Live Server*, right-click `index.html` → *Open with Live Server*. Use Chrome DevTools' device toolbar (Ctrl+Shift+M) to see it at phone size.
 - **On your own phone:** make a second repo (e.g. `scrapbook-prep-test`) with Pages turned on and push changes there first. Install that one on your phone. When it's good, push the same changes to the real repo.
 
-## How the layout works
+## How it works
 
-- Each print is 1200×1800 pixels (4×6 in. at 300 dpi), divided into a 2×2 grid of 600×900 spots (2×3 in.).
-- Wide photos are turned sideways so they fill a tall spot. Once she cuts the print, she can turn the photo any way she likes.
+- Pick a print size: **4×6** (photos come out 2×3 in.), **5×7** (2½×3½) or **8×10** (4×5). Prints are made at 300 dpi. Order the same size in the print app.
+- Every print is a 2×2 grid. Wide photos are turned sideways so they fill a tall spot; after cutting, each photo can be turned any way.
 - **Fill** crops a little off the edges so there's no white space. **Whole photo** shows everything, with white edges if needed.
-- Photos go onto the prints in the order she picked them. If the last print isn't full, its empty spots stay white.
-- Light gray cut lines are optional.
+- **Tap a photo** to select it. In Fill, drag a selected photo to choose which part shows. Press and hold an unselected photo to select and drag in one go. Tap it again to unselect.
+- The **drawer at the bottom** has options for the selected photo: color (color, black & white, sepia), shape (square, rounded corners, circle), copy those to every photo, or remove the photo. Drag it up or tap its top edge to open it.
+- Print size, Fill or Whole photo, and cut lines are remembered between visits.
+- Photos go onto the prints in the order picked. If the last print isn't full, its empty spots stay white.
 
 ## Ideas for later
 
-- Drag to reorder photos, and pinch to adjust the crop on a single photo
-- Other layouts: 2-up (3×4), 9-up wallet size, 1 photo with a border
-- Remember her last settings
-- "Choose from Google Photos" button on PC (Google Photos Picker API)
+- "Choose from Google Photos" (Google Photos Picker API; needs a Google Cloud project and sign-in)
